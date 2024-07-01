@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AddressBook
+namespace AddressBook.Core
 
 // TODO: Clean data so there are no trailing Whitespace
 // TODO: If there are more than 1 spaces between words then reduce to just 1 character 
