@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace AddressBook.Core
@@ -11,32 +12,76 @@ namespace AddressBook.Core
 {
     public class Prompt
     {
-        public string NullCheck(string response)
+        public bool NullOrEmptyStringCheck(string? response)
         {
-            if (response == null)
+            if (response == null || response == "")
             {
-                //TODO: turn null return into an exception
-                return "Your response cannot be null";
+                return false;
             }
 
-            if (response == "")
-            {
-                //TODO: turn empty return into an exception
-                return "Your response cannot be empty";
-            }
-
-            else return response;
+            else return true;
         }
 
-        public string NameCheck(string response)
-        {
-            // TODO: Names can't have numbers (UK Guidelines)
-            // TODO: Names can't have punctionation marks EXCEPT hyphens and apostrophes (UK Guidelines)
-            // TODO: Names can't have special characters eg. @ # ! (UK Guidelines)
-            // TODO: Names can't be misleading eg. Sir, Dr.(UK Guidelines)
-            // TODO: max length 50 characters? 
+        public (bool success, string message) NameCheck(string response)
+        {         
+            // Max length 150 characters incl. white spaces across all your names. Documentation allow only 30 characters in a first name
+            if (response.Length > 30)
+            {
+                return (false, $"Your name can only have 30 characters according to UK guidelines. The length of your name was {response.Length}");
+            }
 
-            return response;
+            foreach (char character in response)
+            {
+                // Names can't have numbers (UK Guidelines)
+                if (char.IsDigit(character))
+                {
+                    return (false, $"You cannot have numbers in your name according to UK law, the character that was flagged was {character}");
+                }
+                
+                // Names can't have punctionation marks EXCEPT hyphens and apostrophes (UK Guidelines)
+                var isSpecialChar = char.IsPunctuation(character);
+                var isPermittedSpecialCharacter = isSpecialChar && (character == '-' || character == '\'');
+
+                if (isSpecialChar && !isPermittedSpecialCharacter) 
+                {
+                    return (false, $"You cannot have {character} in your name according to UK law");
+                }
+                
+                // Names can't have special characters eg. @ # (UK Guidelines)
+                if (char.IsSymbol(character)) 
+                {
+                    return (false, $"You cannot have {character} in your name according to UK law");
+                }
+            }
+
+            // Names can't be misleading eg. Sir, Dr.(UK Guidelines)
+            List<string> honorifics = 
+                [
+                "Sir", 
+                "Lord", 
+                "Laird", 
+                "Lady", 
+                "Prince", 
+                "Princess", 
+                "Viscount", 
+                "Baron", 
+                "Baroness", 
+                "General", 
+                "Captain", 
+                "Professor",
+                "Doctor",
+                "Dr"
+                ];
+
+            foreach (string item in honorifics)
+            {
+                if (response == item)
+                {
+                    return (false, $"You cannot have {item} as your name according to UK law as it can be misleading");
+                }
+            }
+
+            return (true, "This name is allowed");
         }
 
 
