@@ -109,7 +109,7 @@ namespace AddressBook.Tests
             var prompt = new Prompt();
             var testCase = "1234567890";
             var response = prompt.NumCheck(testCase);
-            Assert.That(testCase == response);
+            Assert.That(response.success);
         }
 
         // TODO: Implement how to parse negative numbers if needed
@@ -128,7 +128,7 @@ namespace AddressBook.Tests
             var prompt = new Prompt();
             var testCase = "abc";
             var response = prompt.NumCheck(testCase);
-            Assert.That(testCase != response);
+            Assert.That(!response.success);
         }
 
         [Test]
@@ -137,7 +137,7 @@ namespace AddressBook.Tests
             var prompt = new Prompt();
             var testCase = "abc123";
             var response = prompt.NumCheck(testCase);
-            Assert.That(testCase != response);
+            Assert.That(!response.success);
         }
 
         [Test]

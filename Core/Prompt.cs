@@ -86,18 +86,17 @@ namespace AddressBook.Core
         }
 
 
-        public string NumCheck (string response)
+        public (bool success, string message) NumCheck (string response)
         {
             foreach (char character in response)
             {
                 var characterCandidate = (int)char.GetNumericValue(character);
                 if (characterCandidate == -1)
                 {
-                    //TODO: turn only numbers return into an exception
-                    return "Your response must contain only numbers";
+                    return (false, "Your response must contain only numbers");
                 }
             }
-            return response;
+            return (true, response);
 
             // TODO: think about how to deal with +area codes
             // TODO: think about valid number of characters to make it a geniuene number
