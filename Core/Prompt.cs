@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -102,18 +103,66 @@ namespace AddressBook.Core
             // TODO: think about valid number of characters to make it a geniuene number
         }
 
-        public string EmailCheck (string response)
+        public (bool success, string message) EmailValidationCheck (string response)
         {
-            // TODO: must have an @ symbol
-            // TODO: must have characters before the @
-            // TODO: must have a valid domain name where you have minimum 1 character followed by a . 
-            // TODO: must hace a min 2 characters after the . in the domain part
+            int atSymbolCounter = 0;
+            int atSymbolIndexPosition = -1;
+            int dotSymbolIndexPosition = response.Length;
+            int dotSymbolCounter = 0;
 
+            // must have an @ symbol
+            for (int i = 0; i < response.Length; i++)
+            {
+                if (response[i] == '@')
+                {
+                    atSymbolCounter += 1;
+                    atSymbolIndexPosition = i;
 
+                    if (atSymbolCounter > 1)
+                    {
+                        return (false, "There is more than 1 @ symbol in the email address");
+                    }
+                }
+            }
 
-            return response;
+            if (atSymbolCounter == 0)
+            {
+                return (false, "There is no @ symbol in the email address");
+            }
+
+            // must have characters before the @
+            if (atSymbolIndexPosition == 0)
+            {
+                return (false, "The @ symbol needs to be after a minimum of 1 character");
+            }
+
+            for (int i = atSymbolIndexPosition; i < response.Length; i++)
+            {
+                if (response[i] == '.')
+                {
+                    dotSymbolCounter ++;
+                    dotSymbolIndexPosition = i;
+                }
+            }
+
+            if (dotSymbolCounter == 0)
+            {
+                return (false, "There needs to be a minimum of 1 . symbol");
+            }
+
+            // must have a valid domain name where you have minimum 1 character followed by a . 
+            if (response[atSymbolIndexPosition + 1] == '.')
+            {
+                return (false, "There needs to be a minimum of 1 character between the @ and . symbols");
+            }
+            
+            // must hace a min 2 characters after the . in the domain part
+            if (((response.Length - 1) - dotSymbolIndexPosition) < 2)
+            {
+                return (false, "There must be a minimum of 2 characters after the . symbol");
+            }
+
+            return (true, response);
         }
-
     }
-
 }

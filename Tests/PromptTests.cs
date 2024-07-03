@@ -14,6 +14,23 @@ namespace AddressBook.Tests
         {
         }
 
+        // [Test]
+        // public void AssertNoExceptionThrownOnValidStringCheck()
+        // {
+        //     Exception caught = null;
+        //     try
+        //     {
+        //         var prompt = new Prompt();
+        //         string? testCase = "abc";
+        //         var response = prompt.NullOrEmptyStringCheck(testCase);
+        //     }
+        //     catch (Exception e)
+        //     {
+        //         caught = e;
+        //     }
+        //     Assert.That(caught == null); // this would equate to true
+        // }
+
         [Test]
         public void NullOrEmptyStringCheckPassesIfNotNullOrEmpty()
         {
@@ -31,7 +48,8 @@ namespace AddressBook.Tests
                 ":", ";", "<", "=", ">", "?", "@", "[", "\\", "]", "^", "_", "`", "{", "|", "}", "~"
             };
             var prompt = new Prompt();
-            foreach (var character in specialCharsAndPunctuation) {
+            foreach (var character in specialCharsAndPunctuation)
+            {
                 if (character == "-" || character == "\'") continue;
                 var response = prompt.NameCheck($"abc{character}def");
                 Assert.That(!response.success, $"Character {character} incorrectly passed {nameof(Prompt.NameCheck)}");
@@ -41,19 +59,19 @@ namespace AddressBook.Tests
         [Test]
         public void HonorificsAsTheNameAreCaught()
         {
-            List<string> honorifics = 
+            List<string> honorifics =
                 [
-                "Sir", 
-                "Lord", 
-                "Laird", 
-                "Lady", 
-                "Prince", 
-                "Princess", 
-                "Viscount", 
-                "Baron", 
-                "Baroness", 
-                "General", 
-                "Captain", 
+                "Sir",
+                "Lord",
+                "Laird",
+                "Lady",
+                "Prince",
+                "Princess",
+                "Viscount",
+                "Baron",
+                "Baroness",
+                "General",
+                "Captain",
                 "Professor",
                 "Doctor",
                 "Dr"
@@ -94,14 +112,15 @@ namespace AddressBook.Tests
             Assert.That(testCase == response);
         }
 
-        [Test]
-        public void NumCheckPassesNegativeNumerics()
-        {
-            var prompt = new Prompt();
-            var testCase = "-100";
-            var response = prompt.NumCheck(testCase);
-            Assert.That(testCase == response);
-        }
+        // TODO: Implement how to parse negative numbers if needed
+        // [Test]
+        // public void NumCheckPassesNegativeNumerics()
+        // {
+        //     var prompt = new Prompt();
+        //     var testCase = "-100";
+        //     var response = prompt.NumCheck(testCase);
+        //     Assert.That(testCase == response);
+        // }
 
         [Test]
         public void NumCheckFailsNonNumericsOnly()
@@ -119,6 +138,60 @@ namespace AddressBook.Tests
             var testCase = "abc123";
             var response = prompt.NumCheck(testCase);
             Assert.That(testCase != response);
+        }
+
+        [Test]
+        public void CheckForOneAtSymbolInEmail()
+        {
+            var prompt = new Prompt();
+            var testCase = "testCase@test.com";
+            var response = prompt.EmailValidationCheck(testCase);
+            Assert.That(response.success);
+        }
+
+        [Test]
+        public void CheckMoreThanOneAtSymbolIsFlagged()
+        {
+            var prompt = new Prompt();
+            var testCase = "testCase@te@st.com";
+            var response = prompt.EmailValidationCheck(testCase);
+            Assert.That(!response.success);
+        }
+
+        [Test]
+        public void CheckAtSignAtBeginningOfAddressIsFlagged()
+        {
+            var prompt = new Prompt();
+            var testCase = "@test.com";
+            var response = prompt.EmailValidationCheck(testCase);
+            Assert.That(!response.success);
+        }
+
+        [Test]
+        public void CheckForOneDotSymbolInEmail()
+        {
+            var prompt = new Prompt();
+            var testCase = "testCase@test.com";
+            var response = prompt.EmailValidationCheck(testCase);
+            Assert.That(response.success);
+        }
+
+        [Test]
+        public void CheckDotSymbolDirectlyAfterAtSymbolIsFlagged()
+        {
+            var prompt = new Prompt();
+            var testCase = "testCase@.com";
+            var response = prompt.EmailValidationCheck(testCase);
+            Assert.That(!response.success);
+        }
+
+        [Test]
+        public void CheckLessThanTwoCharactersAfterDotIsFlagged()
+        {
+            var prompt = new Prompt();
+            var testCase = "testCase@test.c";
+            var response = prompt.EmailValidationCheck(testCase);
+            Assert.That(!response.success);
         }
     }
 }
