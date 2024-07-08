@@ -22,14 +22,16 @@ namespace AddressBook.Core
 
     public class Prompt
     {
-        public static void PromptForAnswer(string question, PromptValidationType validationType)
+        public static string PromptForAnswer(string question, PromptValidationType validationType)
         {
             (bool success, string? message) validatedResponse = (false, "initial message");
+
+            string response = "";
 
             while (validatedResponse.success == false)
             {
                 Console.WriteLine(question);
-                string? response = Console.ReadLine();
+                response = Console.ReadLine();
                 validatedResponse = ValidatePrompt(validationType, response ?? "");
 
                 if (validatedResponse.success == false)
@@ -41,6 +43,8 @@ namespace AddressBook.Core
                     Console.WriteLine($"Recognised input: {response}");
                 }
             }
+
+            return response;
         }
 
         private static (bool success, string? message) ValidatePrompt(PromptValidationType validationType, string response)
