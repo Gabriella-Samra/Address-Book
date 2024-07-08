@@ -61,11 +61,5 @@ namespace AddressBook.Core
                 default: throw new NotImplementedException($"Cannot handle validation type {validationType}");
             }
         }
-
-        private static (bool success, string message) ValidationChecker((bool success, string message) resultOfValidationCheck, string response)
-        {
-            if (resultOfValidationCheck.success == false) return resultOfValidationCheck;
-            return (true, response);
-        }
     }
 }
