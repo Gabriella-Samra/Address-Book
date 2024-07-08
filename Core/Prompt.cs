@@ -14,21 +14,21 @@ namespace AddressBook.Core
 {
     public class Prompt
     {
-        public static void PromptInitialiser(string question)
+        public static void PromptForAnswerInitialiser(string question)
         {
-            (bool success, string? message) response = (false, "initial message");
+            (bool success, string? message) validatedResponse = (false, "initial message");
 
-            while (response.success == false)
+            while (validatedResponse.success == false)
             {
-                response = Prompt.PromptForResponse($"{question}");
+                validatedResponse = Prompt.PromptForResponse($"{question}");
 
-                if (response.success == false)
+                if (validatedResponse.success == false)
                 {
-                    Console.WriteLine($"{response.message}, please try again");
+                    Console.WriteLine($"{validatedResponse.message}, please try again");
                 }
             }
 
-            response = (false, "initial message");
+            validatedResponse = (false, "initial message");
         }
 
         public static (bool success, string? message) PromptForResponse(string message)
@@ -47,36 +47,36 @@ namespace AddressBook.Core
 
             if (message.Contains("first"))
             {
-                var validationCheck = PromptValidation.NameCheck(response);
-                return ValidationChecker(validationCheck, response);
+                var resultOfValidationCheck = PromptValidation.NameCheck(response);
+                return ValidationChecker(resultOfValidationCheck, response);
             }
 
             if (message.Contains("last"))
             {
-                var validationCheck = PromptValidation.NameCheck(response);
-                return ValidationChecker(validationCheck, response);
+                var resultOfValidationCheck = PromptValidation.NameCheck(response);
+                return ValidationChecker(resultOfValidationCheck, response);
             }
 
             if (message.Contains("number"))
             {
-                var validationCheck = PromptValidation.NumCheck(response);
-                return ValidationChecker(validationCheck, response);
+                var resultOfValidationCheck = PromptValidation.NumCheck(response);
+                return ValidationChecker(resultOfValidationCheck, response);
             }
 
             if (message.Contains("email"))
             {
-                var validationCheck = PromptValidation.EmailValidationCheck(response);
-                return ValidationChecker(validationCheck, response);                
+                var resultOfValidationCheck = PromptValidation.EmailValidationCheck(response);
+                return ValidationChecker(resultOfValidationCheck, response);                
             }
 
             return (true, response); 
         }
 
-        private static (bool success, string message) ValidationChecker ((bool success, string message) validationCheck, string response)
+        private static (bool success, string message) ValidationChecker ((bool success, string message) resultOfValidationCheck, string response)
         {
-            if (validationCheck.success == false)
+            if (resultOfValidationCheck.success == false)
                 {
-                    return (validationCheck.success, validationCheck.message);
+                    return (resultOfValidationCheck.success, resultOfValidationCheck.message);
                 }
             else return (true, response);
         }
