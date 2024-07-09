@@ -15,7 +15,7 @@ namespace AddressBook.Core
             return !string.IsNullOrEmpty(response);
         }
 
-        public static (bool success, string message) NameCheck(string response)
+        public static (bool success, string message) NameValidationCheck(string response)
         {         
             // Max length 150 characters incl. white spaces across all your names. Documentation allow only 30 characters in a first name
             if (response.Length > 30)
@@ -77,7 +77,7 @@ namespace AddressBook.Core
             return (true, "This name is allowed");
         }
 
-        public static (bool success, string message) NumCheck (string response)
+        public static (bool success, string message) NumberValidationCheck (string response)
         {
             foreach (char character in response)
             {

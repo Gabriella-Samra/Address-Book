@@ -49,8 +49,8 @@ namespace AddressBook.Tests
             foreach (var character in specialCharsAndPunctuation)
             {
                 if (character == "-" || character == "\'") continue;
-                var response = PromptValidation.NameCheck($"abc{character}def");
-                Assert.That(!response.success, $"Character {character} incorrectly passed {nameof(PromptValidation.NameCheck)}");
+                var response = PromptValidation.NameValidationCheck($"abc{character}def");
+                Assert.That(!response.success, $"Character {character} incorrectly passed {nameof(PromptValidation.NameValidationCheck)}");
             }
         }
 
@@ -77,7 +77,7 @@ namespace AddressBook.Tests
 
             foreach (string item in honorifics)
             {
-                var response = PromptValidation.NameCheck(item);
+                var response = PromptValidation.NameValidationCheck(item);
                 Assert.That(!response.success, $"The list of honorfics do not match. The name {item} was not found in the code that was being tested");
             }
         }
@@ -102,7 +102,7 @@ namespace AddressBook.Tests
         public void NumCheckPassesNumericsOnly()
         {
             var testCase = "1234567890";
-            var response = PromptValidation.NumCheck(testCase);
+            var response = PromptValidation.NumberValidationCheck(testCase);
             Assert.That(response.success);
         }
 
@@ -120,7 +120,7 @@ namespace AddressBook.Tests
         public void NumCheckFailsNonNumericsOnly()
         {
             var testCase = "abc";
-            var response = PromptValidation.NumCheck(testCase);
+            var response = PromptValidation.NumberValidationCheck(testCase);
             Assert.That(!response.success);
         }
 
@@ -128,7 +128,7 @@ namespace AddressBook.Tests
         public void NumCheckFailsMixedInput()
         {
             var testCase = "abc123";
-            var response = PromptValidation.NumCheck(testCase);
+            var response = PromptValidation.NumberValidationCheck(testCase);
             Assert.That(!response.success);
         }
 
