@@ -6,9 +6,9 @@ using AddressBook.Core;
 
 namespace AddressBook.Core.Data
 {
-    public class StoringDataInMemory
+    public class MemoryAddressBookStore
     {
-        public static List<AddressBookItem>? StoredAddressBookItems {get; private set; } = new List<AddressBookItem>();
+        public static List<AddressBookItem> StoredAddressBookItems {get; private set; } = new List<AddressBookItem>();
 
         public static void WriteToAddressBook(List<AddressBookItem> addressBookItems)
         {

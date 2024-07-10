@@ -20,49 +20,53 @@ namespace AddressBook.Core
         Email
     }
 
-    public class Prompt
+    public static class Prompt
     {
-        public static void PromptForOptionValidator(string? chosenOption)
+        public static void PromptForOptionValidator(string? chosenOption, IAddressBookStore addressBookWriter)
         {
             //TODO: Make the options not case sensitive
-            if (chosenOption == "Enter")
-            {
-                AddAnEntry();
-            }
 
-            if (chosenOption == "Find")
+            while (true)
             {
-                SearchForAnEntry();
-            }
+                // Make this into a switch
+                if (chosenOption == "Enter")
+                {
+                    AddAnEntry(addressBookWriter);
+                }
 
-            if (chosenOption == "Exit")
-            {
-                //TODO: Add a message to say that you are exiting now
-                Environment.Exit(0);
-            }
+                if (chosenOption == "Find")
+                {
+                    SearchForAnEntry(addressBookWriter);
+                }
 
-            else 
-            {
-                Console.WriteLine("Please choose one of the following options: \"Enter\" to enter an item to the address book, \"Find\" to search for a specific entry, and \"Exit\" to exit the program");
-                var promptForWhichActionToTake = Console.ReadLine();
-                Prompt.PromptForOptionValidator(promptForWhichActionToTake);
+                if (chosenOption == "Exit")
+                {
+                    Console.WriteLine("Okay, exiting the program now");
+                    Environment.Exit(0);
+                }
+
+                else 
+                {
+                    Console.WriteLine("Please choose one of the following options: \"Enter\" to enter an item to the address book, \"Find\" to search for a specific entry, and \"Exit\" to exit the program");
+                    var promptForWhichActionToTake = Console.ReadLine();
+                    Prompt.PromptForOptionValidator(promptForWhichActionToTake, addressBookWriter);
+                }
             }
+            
         }
 
-        private static void AddAnEntry()
+        private static void AddAnEntry(IAddressBookStore addressBookWriter)
         {
             var firstName = Prompt.PromptForAnswer("What is your first name?", PromptValidationType.Name);
             var lastName = Prompt.PromptForAnswer("What is your last name?", PromptValidationType.Name);
             var number = Prompt.PromptForAnswer("What is your main telephone number?", PromptValidationType.PhoneNumber);
             var email = Prompt.PromptForAnswer("What is your email address?", PromptValidationType.Email);
-            IAddressBookWriter addressBookWriter = new MemoryWriter();
             addressBookWriter.Write(new List<AddressBookItem> { new AddressBookItem { FirstName = firstName, LastName = lastName, Email = email, PhoneNumber = number } });
         }
 
-        private static void SearchForAnEntry()
+        private static void SearchForAnEntry(IAddressBookStore addressBookReader)
         {
             var request = Prompt.PromptForAnswer("What is the name of the person's details are you looking for?", PromptValidationType.Name);
-            IAddressBookWriter addressBookReader = new MemoryWriter();
             var matchedNames = addressBookReader.Read(request);
 
             foreach (var item in matchedNames)

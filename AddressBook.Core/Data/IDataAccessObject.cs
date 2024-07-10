@@ -7,31 +7,31 @@ using AddressBook.Core;
 
 namespace AddressBook.Core.Data
 {
-    public interface IAddressBookWriter
+    public interface IAddressBookStore
     {
         List<AddressBookItem> Read(string firstName);
         void Write(List<AddressBookItem> items);
     }
 
-    public class MemoryWriter : IAddressBookWriter
+    public class MemoryStore : IAddressBookStore
     {
         public List<AddressBookItem> Read(string firstName)
         {
-            if (StoringDataInMemory.StoredAddressBookItems == null)
+            if (MemoryAddressBookStore.StoredAddressBookItems == null)
             {
                 return new List<AddressBookItem>();
             }
-
-            return StoringDataInMemory.StoredAddressBookItems.Where(item => item.FirstName.Contains(firstName, StringComparison.OrdinalIgnoreCase)).ToList();
+            
+            return MemoryAddressBookStore.StoredAddressBookItems.Where(item => item.FirstName.Contains(firstName, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
         public void Write(List<AddressBookItem> items)
         {
-            StoringDataInMemory.WriteToAddressBook(items);
+            MemoryAddressBookStore.WriteToAddressBook(items);
         }
     }
 
-    public class DiskWriter : IAddressBookWriter
+    public class DiskStore : IAddressBookStore
     {
         public List<AddressBookItem> Read(string firstName)
         {
